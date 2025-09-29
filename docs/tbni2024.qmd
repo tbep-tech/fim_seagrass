@@ -23,8 +23,6 @@ library(leaflet)
 data(fimstations, package = 'tbeptools')
 data(tbseg, package = 'tbeptools')
 
-fimstations <- fimstations[tbseg, ]
-
 load(file = here('data/tbniscr.RData'))
 load(file = here('data/sgdat2024.RData'))
 
@@ -46,11 +44,11 @@ hydrolab <- read.csv(url('https://github.com/tbep-tech/tbni-proc/raw/refs/heads/
 
 bssize <- 13
 
-
 yrs <- c(2022:2024)
 
 # fim station salinity, temp
 hydrodat <- hydrolab |> 
+  filter(Depth == min(Depth), .by = c(Reference,  Year, Month)) |> 
   summarise(
     temp = mean(Temperature, na.rm = T),
     sal = mean(Salinity, na.rm = T),
@@ -103,7 +101,7 @@ map_fun <- function(tomap, date, bsmap, hbsgdat, show_richness = FALSE){
     
     # Create color palette function for FLUCCSCODE
     flucc_pal <- colorFactor(
-        palette = c("#90EE90", "#228B22"),  # light green, dark green
+        palette = c("#228B22", "#90EE90"),
         domain = c("Patchy", "Continuous")
     )
     
