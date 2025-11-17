@@ -19,6 +19,7 @@ library(here)
 library(patchwork)
 library(sf)
 library(leaflet)
+library(tbeptools)
 
 data(fimstations, package = 'tbeptools')
 data(tbseg, package = 'tbeptools')
@@ -397,5 +398,26 @@ map_fun(tomap, as.Date('2024-03-01'), bsmap, hbsgdat, show_richness = TRUE)
 ```
 
 :::
+
+## Key Messages Graphic
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+tbniscr <- anlz_tbniscr(fimdata)
+p1 <- show_tbniscrall(tbniscr) + 
+    scale_y_continuous('Mean Score +/- 95% Confidence', limits = c(22, 58)) +
+    labs(
+        title = "TBNI Scores Across Tampa Bay Segments"
+    )
+p2 <- show_tbniscr(tbniscr, bay_segment = c('HB', 'LTB')) +
+    scale_y_continuous('TBNI Score', limits = c(22, 58)) +
+    labs(
+        title = "Hillsborough and Lower Tampa Bay TBNI Scores",
+        caption = 'Colors indicate management categories, green: Stay the Course, yellow: Caution, Red: On Alert'
+    )
+
+p1 / p2 + plot_layout(ncol = 1)
+```
 
 :::
